@@ -1,0 +1,24 @@
+{
+    // IntelliSense を使用して利用可能な属性を学べます。
+    // 既存の属性の説明をホバーして表示します。
+    // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${fileDirname}",
+            "env": {
+                "USER_NAME": "ふぉくしーど",
+                "CONSUMER_KEY": "jXYQgxdPF6Rvzv0ZAfTckcBOy",
+                "CONSUMER_SECRET": "EnX7A5ObTxB5PnSbFG2gscDLxprgm5rUCXPquLWDQv2MOi8tv8",
+                "ACCESS_TOKEN": "4086108494-FAUKOFZww85VGNINDlIXWsVdNH7DsCwu4zK4rCH",
+                "ACCESS_TOKEN_SECRET": "iSVuO65A0OxGSIYkJEuxjSXYo9fxfJ8Gx3P93t5gbpznh",
+                "TIMETREE_ACCESS_TOKEN": "x742DZgEiWqbMsa3OKt8riASsRAm6Pkr5-8_kT5a_10"
+            },
+            "args": []
+        }
+    ]
+}
