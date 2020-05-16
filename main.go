@@ -3,11 +3,12 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 )
 
 func main() {
 	http.HandleFunc("/callback", callbackFunc)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 }
 
 // callbackFunc はアクセスされたときに処理を行う関数
