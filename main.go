@@ -15,4 +15,6 @@ func callbackFunc(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("GETされちゃいました！")
 	fmt.Println("code:", r.FormValue("code"))
 	fmt.Println("state", r.FormValue("state"))
+
+	w.Write([]byte("アクセス成功"))
 }
