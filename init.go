@@ -14,8 +14,6 @@ var (
 	dbURL     string = os.Getenv("DATABASE_URL")
 	tableName string = "homeworks"
 	db        *sql.DB
-
-	checkAlarmed [24][60]bool
 )
 
 func init() {
