@@ -104,9 +104,9 @@ func getSchedule() {
 		jsonData.Data[i].Attributes.UpdatedAt = timeDiffConv(jsonData.Data[i].Attributes.UpdatedAt)
 		jsonData.Data[i].Attributes.CreatedAt = timeDiffConv(jsonData.Data[i].Attributes.CreatedAt)
 
-		// // 仮として追加
-		// jsonData.Data[i].Attributes.EndAt, _ = time.Parse("2006-01-02 15-04-05", "2020-05-17 18-30-00")
-		// jsonData.Data[i].Attributes.EndAt = timeDiffConv(jsonData.Data[i].Attributes.EndAt)
+		// 仮として追加
+		jsonData.Data[i].Attributes.EndAt, _ = time.Parse("2006-01-02 15-04-05", "2020-05-18 04-00-00")
+		jsonData.Data[i].Attributes.EndAt = timeDiffConv(jsonData.Data[i].Attributes.EndAt)
 
 		// 課題ラベルが貼られたスケジュールをデータベースに追加
 		// IDが32文字以外ならスルー
