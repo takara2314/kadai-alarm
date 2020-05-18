@@ -11,12 +11,18 @@
             "mode": "auto",
             "program": "${fileDirname}",
             "env": {
+                "PORT": "8080",
                 "USER_NAME": "ふぉくしーど",
+                "HOUR_BEFORE_DEPARTURE": "3",
+                "DRIVER_NAME": "postgres",
+				"DATABASE_URL": "postgres://tamhbetmfewgih:3d381b3bfecdc73c4b09e0c64f4bb5f410a5d146dd35ef64050a178edc331c17@ec2-52-71-55-81.compute-1.amazonaws.com:5432/d9oq8du08seq3k",
                 "CONSUMER_KEY": "jXYQgxdPF6Rvzv0ZAfTckcBOy",
                 "CONSUMER_SECRET": "EnX7A5ObTxB5PnSbFG2gscDLxprgm5rUCXPquLWDQv2MOi8tv8",
                 "ACCESS_TOKEN": "4086108494-FAUKOFZww85VGNINDlIXWsVdNH7DsCwu4zK4rCH",
                 "ACCESS_TOKEN_SECRET": "iSVuO65A0OxGSIYkJEuxjSXYo9fxfJ8Gx3P93t5gbpznh",
-                "TIMETREE_ACCESS_TOKEN": "x742DZgEiWqbMsa3OKt8riASsRAm6Pkr5-8_kT5a_10"
+                "TIMETREE_TOKEN": "GZ7DVjCrQ8b3dW2ofBzQifRyovnW5XBlyPJl4v2i5-9ZwJMH",
+                "CALENDAR_ID": "EYp5rP1Gzo6d",
+                "LABEL_ID": "EYp5rP1Gzo6d"
             },
             "args": []
         }
