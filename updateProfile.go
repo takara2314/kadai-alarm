@@ -8,7 +8,7 @@ import (
 	"github.com/ChimeraCoder/anaconda"
 )
 
-func updateProfile(subject string) {
+func updateProfile(subject string, toNormal bool) {
 	api := getTwitterAPI()
 
 	// _, err := api.PostTweet("さっき言ったやつ、結構順調に進んでる！", nil)
@@ -16,8 +16,13 @@ func updateProfile(subject string) {
 	// 	panic(err)
 	// }
 
-	var userName string = os.Getenv("USER_NAME")
-	var postUserName string = userName + "@" + subject + "の課題未提出かもよ"
+	var postUserName string
+	if !toNormal {
+		var userName string = os.Getenv("USER_NAME")
+		postUserName = userName + "@" + subject + "の課題未提出かもよ"
+	} else {
+		postUserName = os.Getenv("USER_NAME")
+	}
 
 	changeThings := url.Values{}
 	changeThings.Set("name", postUserName)
