@@ -12,7 +12,7 @@ func doOnScheduleTime(getHours []int) {
 		var nowHour, nowMinute int = nowTime.Hour(), nowTime.Minute()
 
 		// 現在時刻がh時0分と30分なら条件分岐開始
-		if sliceContain(getHours, nowHour) && (nowMinute == 0 || nowMinute == 30 || nowMinute == 13) {
+		if sliceContain(getHours, nowHour) && (nowMinute == 0 || nowMinute == 30 || nowMinute == 15) {
 			// この時刻に1回も実行していないのなら
 			if !checkAlarmed[nowHour][nowMinute] {
 				// マップの各キー名のIDを取り出す
