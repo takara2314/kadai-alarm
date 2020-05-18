@@ -97,6 +97,8 @@ func getSchedule() {
 		panic(err)
 	}
 
+	// 現在のdbテーブルの中のデータを削除
+	dbDelete()
 	for i := 0; i < len(jsonData.Data); i++ {
 		// UTC時刻をJST時刻に変換
 		jsonData.Data[i].Attributes.StartAt = timeDiffConv(jsonData.Data[i].Attributes.StartAt)

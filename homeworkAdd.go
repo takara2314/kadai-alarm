@@ -74,6 +74,16 @@ func dbWrite(homeworkInfo *insertData) {
 	}
 }
 
+// dbDelete はテーブル内のデータをすべて削除する関数
+func dbDelete() {
+	var sqlStatement string = "DELETE FROM " + tableName
+
+	_, err := db.Exec(sqlStatement)
+	if err != nil {
+		panic(err)
+	}
+}
+
 // alarmTimeAdd は課題アラームを追加し、アラーム時刻を返す
 func alarmTimeAdd(id string, dueTime time.Time, name string) time.Time {
 	// 提出期限の何時間前かを取得し、その時刻を求める
