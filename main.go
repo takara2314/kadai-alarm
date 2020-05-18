@@ -23,10 +23,13 @@ func main() {
 	go doOnScheduleTime([]int{0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23}, []int{0, 15, 30, 45})
 	// 定期的にTimeTreeのスケジュールを取得
 	go getScheduleRegularly([]int{0, 7, 9, 11, 13, 15, 17, 19, 21, 23})
+	// 毎時指定した時間にpingを送って返させて、dynoを停止させないようにする
+	go pingRegularly([]int{0, 15, 30, 45})
 	// アクセスしたときにTimeTreeのスケジュールを取得
 	http.HandleFunc("/", serverMainFunc)
 	http.HandleFunc("/get", serverGetFunc)
 	http.HandleFunc("/now", serverNowFunc)
+	http.HandleFunc("/ping", serverPingFunc)
 	http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 }
 
@@ -47,6 +50,11 @@ func serverGetFunc(w http.ResponseWriter, r *http.Request) {
 func serverNowFunc(w http.ResponseWriter, r *http.Request) {
 	nowAlarms()
 	w.Write([]byte("現在のスケジュールをコンソールに表示しました。"))
+}
+
+// serverPingFunc はアクセスされたときに処理を行う関数
+func serverPingFunc(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("pong"))
 }
 
 // getScheduleRegularly は毎日定めた時間にTimeTreeのスケジュールを取得する関数
