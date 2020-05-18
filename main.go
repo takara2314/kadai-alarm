@@ -20,7 +20,7 @@ var alarmTimes map[string][]interface{} = make(map[string][]interface{})
 
 func main() {
 	// 提出期限の指定した時間前になったら本人に通知
-	go doOnScheduleTime([]int{0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23})
+	go doOnScheduleTime([]int{0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23}, []int{0, 15, 30, 45})
 	// 定期的にTimeTreeのスケジュールを取得
 	go getScheduleRegularly([]int{0, 7, 9, 11, 13, 15, 17, 19, 21, 23})
 	// アクセスしたときにTimeTreeのスケジュールを取得

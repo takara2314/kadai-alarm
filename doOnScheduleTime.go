@@ -6,13 +6,13 @@ import (
 )
 
 // doOnScheduleTime は定期的にアラーム時刻になっていないかをチェックし、なっている場合は報告を行う関数
-func doOnScheduleTime(getHours []int) {
+func doOnScheduleTime(getHours []int, getMinutes []int) {
 	for {
 		var nowTime time.Time = time.Now()
 		var nowHour, nowMinute int = nowTime.Hour(), nowTime.Minute()
 
-		// 現在時刻がh時0分と30分なら条件分岐開始
-		if sliceContain(getHours, nowHour) && (nowMinute == 0 || nowMinute == 30 || nowMinute == 15) {
+		// 現在時刻がh時m分なら条件分岐開始
+		if sliceContain(getHours, nowHour) && sliceContain(getMinutes, nowMinute) {
 			// この時刻に1回も実行していないのなら
 			if !checkAlarmed[nowHour][nowMinute] {
 				// マップの各キー名のIDを取り出す
@@ -27,15 +27,13 @@ func doOnScheduleTime(getHours []int) {
 					// interface{}型からtime.Time型にキャスト (型アサーション)
 					var alarmTime time.Time = alarmTimes[homeworkIDs[i]][0].(time.Time)
 
-					fmt.Println(alarmTime)
-					fmt.Println(nowTime)
-					fmt.Println(alarmTime.Sub(nowTime))
+					// fmt.Println(alarmTime)
+					// fmt.Println(nowTime)
+					// fmt.Println(alarmTime.Sub(nowTime))
 					// 現在時刻の1時間以内にアラーム予定時刻が来るとき
 					if int(alarmTime.Sub(nowTime).Hours()) <= 1 {
-						fmt.Println("おっと！未提出か！？", fmt.Sprintf("%v", alarmTimes[homeworkIDs[i]][1]))
+						fmt.Printf("%vの課題が未提出かもしれません！", alarmTimes[homeworkIDs[i]][1])
 						alarmHomeworks = append(alarmHomeworks, fmt.Sprintf("%v", alarmTimes[homeworkIDs[i]][1]))
-					} else {
-						fmt.Println("まだまだです…")
 					}
 				}
 
