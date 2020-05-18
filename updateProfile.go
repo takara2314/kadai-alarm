@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/url"
 	"os"
 
@@ -26,5 +27,7 @@ func updateProfile(subject string) {
 func getTwitterAPI() *anaconda.TwitterApi {
 	anaconda.SetConsumerKey(os.Getenv("CONSUMER_KEY"))
 	anaconda.SetConsumerSecret(os.Getenv("CONSUMER_SECRET"))
+
+	fmt.Println("ツイッターの名前を変更しました…")
 	return anaconda.NewTwitterApi(os.Getenv("ACCESS_TOKEN"), os.Getenv("ACCESS_TOKEN_SECRET"))
 }
