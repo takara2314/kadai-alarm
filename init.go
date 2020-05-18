@@ -23,6 +23,7 @@ func init() {
 		panic(err)
 	}
 
+	dbDelete()
 	// 現在の課題ID、省略された課題の教科名、アラーム時刻を取得
 	var sqlStatement string = fmt.Sprintf("SELECT id, omitted, alarmtime FROM %s", tableName)
 	rows, err := db.Query(sqlStatement)
