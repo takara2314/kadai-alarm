@@ -90,14 +90,10 @@ func alarmTimeAdd(id string, dueTime time.Time, name string) time.Time {
 	hourBeforeDep, _ := strconv.Atoi(os.Getenv("HOUR_BEFORE_DEPARTURE"))
 	var alarmTime time.Time = dueTime.Add(-time.Duration(hourBeforeDep) * time.Hour)
 
-	// fmt.Println("予定追加:", alarmTime, name)
-
 	// アラーム一覧になければ課題アラームを追加
 	if _, exist := alarmTimes[id]; !exist {
 		alarmTimes[id] = []interface{}{alarmTime, name}
 	}
-
-	// fmt.Println("現在の課題アラーム:", alarmTimes)
 
 	return alarmTime
 }
