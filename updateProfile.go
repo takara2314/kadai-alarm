@@ -12,11 +12,11 @@ func updateProfile(subject string, toNormal bool) {
 	api := getTwitterAPI()
 
 	var postUserName string
+	var userName string = "ふぉくしーど"
 	if !toNormal {
-		var userName string = os.Getenv("USER_NAME")
 		postUserName = userName + "@" + subject + "の課題未提出かもよ"
 	} else {
-		postUserName = os.Getenv("USER_NAME")
+		postUserName = userName
 	}
 
 	changeThings := url.Values{}
