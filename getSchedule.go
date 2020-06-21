@@ -86,6 +86,7 @@ func getSchedule() {
 
 	body, _ := ioutil.ReadAll(response.Body)
 
+	// APIレスポンスを確認
 	// fmt.Println(string(body))
 	// fmt.Println("取得回数上限:", response.Header.Values("X-Ratelimit-Limit"))
 	// fmt.Println("残機:", response.Header.Values("X-Ratelimit-Remaining"))
