@@ -12,10 +12,11 @@ import (
 const location = "Asia/Tokyo"
 
 var (
-	dbDriver  string = os.Getenv("DRIVER_NAME")
-	dbURL     string = os.Getenv("DATABASE_URL")
-	tableName string = "homeworks"
-	db        *sql.DB
+	dbDriver       string = os.Getenv("DRIVER_NAME")
+	dbURL          string = os.Getenv("DATABASE_URL")
+	tableName      string = "homeworks"
+	db             *sql.DB
+	oldTwitterName string = "ふぉくしーど"
 )
 
 func init() {

@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -74,7 +73,7 @@ func getSchedule() {
 	reqURLvar.Add("days", "7")
 	reqURL.RawQuery = reqURLvar.Encode()
 
-	fmt.Println(reqURL.String())
+	// fmt.Println(reqURL.String())
 
 	req, _ := http.NewRequest("GET", reqURL.String(), nil)
 
