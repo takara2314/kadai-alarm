@@ -13,6 +13,7 @@ func updateProfile(subject string, toNormal bool) {
 
 	var postUserName string
 	var userName string = "ふぉくしーど"
+
 	if !toNormal {
 		postUserName = userName + "@" + subject + "の課題未提出かもよ"
 	} else {
