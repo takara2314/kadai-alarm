@@ -29,7 +29,6 @@ func main() {
 	http.HandleFunc("/", serverMainFunc)
 	http.HandleFunc("/get", serverGetFunc)
 	http.HandleFunc("/now", serverNowFunc)
-	http.HandleFunc("/ping", serverPingFunc)
 	http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 }
 
@@ -50,11 +49,6 @@ func serverGetFunc(w http.ResponseWriter, r *http.Request) {
 func serverNowFunc(w http.ResponseWriter, r *http.Request) {
 	nowAlarms()
 	w.Write([]byte("現在のスケジュールをコンソールに表示しました。"))
-}
-
-// serverPingFunc はアクセスされたときに処理を行う関数
-func serverPingFunc(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("pong"))
 }
 
 // getScheduleRegularly は毎日定めた時間にTimeTreeのスケジュールを取得する関数
