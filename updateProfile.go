@@ -22,8 +22,15 @@ func updateProfile(subject string, toNormal bool) {
 
 	changeThings := url.Values{}
 	changeThings.Set("name", postUserName)
-	api.PostAccountUpdateProfile(changeThings)
-	fmt.Println("ツイッターの名前を変更しました…")
+	_, err := api.PostAccountUpdateProfile(changeThings)
+	if err != nil {
+		panic(err)
+	} else {
+		if oldTwitterName != postUserName {
+			oldTwitterName = postUserName
+			fmt.Printf("ツイッターの名前を変更しました！(%s)\n", postUserName)
+		}
+	}
 }
 
 func getTwitterAPI() *anaconda.TwitterApi {
