@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	"cloud.google.com/go/firestore"
 	_ "github.com/lib/pq"
 )
 
@@ -20,6 +21,7 @@ type insertData struct {
 }
 
 func homeworkAdd(homeworkID string, subject string, subjectOmitted string, homework string, dueTime time.Time) {
+	dbAdd()
 	homeworkInfo := insertData{
 		HomeworkID:     homeworkID,
 		Subject:        subject,
@@ -32,7 +34,7 @@ func homeworkAdd(homeworkID string, subject string, subjectOmitted string, homew
 }
 
 // dbAdd はDBテーブルに同じデータがなければ追加する関数
-func dbAdd(homeworkInfo *insertData) {
+func dbAdd(client *firestore.Client, homeworkInfo *map[string]interface{}) {
 	var sqlStatement string = fmt.Sprintf("SELECT id FROM %s", tableName)
 
 	rows, err := db.Query(sqlStatement)
