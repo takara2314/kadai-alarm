@@ -1,3 +1,2 @@
+# .vscode フォルダに開発用の環境変数が載っているのでGit管理外に
 .vscode/
-environ.yaml
-kadai-alarm-5365dc12423d.json

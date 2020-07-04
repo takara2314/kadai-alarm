@@ -58,22 +58,7 @@ type ScheduleStruct struct {
 	} `json:"data"`
 }
 
-// getScheduleRegularly は毎日定めた時間にTimeTreeのスケジュールを取得する関数
-func getScheduleRegularly(getHours []int) {
-	for {
-		var nowTime time.Time = time.Now()
-		// 現在時刻がh時0分なら条件分岐開始
-		if nowTime.Minute() == 0 {
-			// 対象の時刻(h時)になったらスケジュール取得
-			if sliceContain(getHours, nowTime.Hour()) {
-				getSchedule()
-				fmt.Println("スケジュールが自動更新されました。(定期更新)")
-			}
-		}
-	}
-}
-
-// getSchedule はTimeTreeにアクセスして予定を取得する関数
+// getSchedule はアクセスされたときに処理を行う関数
 func getSchedule() {
 	var baseURL string = "https://timetreeapis.com/calendars/"
 	reqURL, err := url.Parse(baseURL)
@@ -84,11 +69,12 @@ func getSchedule() {
 	reqURL.Path = path.Join(reqURL.Path, os.Getenv("CALENDAR_ID"))
 	reqURL.Path = path.Join(reqURL.Path, "upcoming_events")
 	reqURLvar, _ := url.ParseQuery(reqURL.RawQuery)
+	// タイムゾーン指定しても何故か要求通りに返ってこない
+	// reqURLvar.Add("timezone", "Asia/Tokyo")
 	reqURLvar.Add("days", "7")
 	reqURL.RawQuery = reqURLvar.Encode()
 
-	// GETするURLを確認
-	// fmt.Println(reqURL.String())
+	fmt.Println(reqURL.String())
 
 	req, _ := http.NewRequest("GET", reqURL.String(), nil)
 
@@ -100,7 +86,6 @@ func getSchedule() {
 
 	body, _ := ioutil.ReadAll(response.Body)
 
-	// APIレスポンスを確認
 	// fmt.Println(string(body))
 	// fmt.Println("取得回数上限:", response.Header.Values("X-Ratelimit-Limit"))
 	// fmt.Println("残機:", response.Header.Values("X-Ratelimit-Remaining"))
@@ -112,41 +97,36 @@ func getSchedule() {
 		panic(err)
 	}
 
-	// 現在のデータベースのhomeworksコレクションを全初期化
+	// 現在のdbテーブルの中のデータを削除
 	dbDelete()
 	for i := 0; i < len(jsonData.Data); i++ {
-		// スケジュールの時刻をUTCからJSTに変換
+		// UTC時刻をJST時刻に変換
 		jsonData.Data[i].Attributes.StartAt = timeDiffConv(jsonData.Data[i].Attributes.StartAt)
 		jsonData.Data[i].Attributes.EndAt = timeDiffConv(jsonData.Data[i].Attributes.EndAt)
 		jsonData.Data[i].Attributes.UpdatedAt = timeDiffConv(jsonData.Data[i].Attributes.UpdatedAt)
 		jsonData.Data[i].Attributes.CreatedAt = timeDiffConv(jsonData.Data[i].Attributes.CreatedAt)
 
+		// // 仮として追加
+		// jsonData.Data[i].Attributes.EndAt, _ = time.Parse("2006-01-02 15-04-05", "2020-05-18 04-00-00")
+		// jsonData.Data[i].Attributes.EndAt = timeDiffConv(jsonData.Data[i].Attributes.EndAt)
+
 		// 課題ラベルが貼られたスケジュールをデータベースに追加
-		// そのラベルが貼られたもののIDは32文字と決まっているので、それ以外は無視
+		// IDが32文字以外ならスルー
 		if strings.Split(jsonData.Data[i].Relationships.Label.Data.ID, ",")[0] == os.Getenv("LABEL_ID") && idIsFinite(jsonData.Data[i].ID) {
 			var homeworkID string = jsonData.Data[i].ID
-			var subject, subjectOmitted, title string = subjectSeparate(jsonData.Data[i].Attributes.Title)
-			var dueAt time.Time = jsonData.Data[i].Attributes.EndAt
-			var alarmAt time.Time = alarmTimeCalc(dueAt)
+			var subject, subjectOmitted, homework string = subjectSeparate(jsonData.Data[i].Attributes.Title)
+			var dueTime time.Time = jsonData.Data[i].Attributes.EndAt
 
-			// 現在のアラームに指定する課題を追加
-			dbAdd(dbClient, map[string]interface{}{
-				"homeworkID": homeworkID,
-				"subject":    subject,
-				"omitted":    subjectOmitted,
-				"title":      title,
-				"dueAt":      dueAt,
-				"alarmAt":    alarmAt,
-			})
+			// fmt.Println("追加します！", homeworkID, subject, subjectOmitted, homework, dueTime)
 
-			alarmAdd(homeworkID, dueTime, alarmAt)
+			homeworkAdd(homeworkID, subject, subjectOmitted, homework, dueTime)
 		}
 	}
 }
 
 // timeDiffConv は時差変換をして返す関数
 func timeDiffConv(tTime time.Time) (rTime time.Time) {
-	// 純度が高いUTCにする
+	// よりUTCらしくする
 	rTime = tTime.UTC()
 
 	// UTC → JST
@@ -157,14 +137,14 @@ func timeDiffConv(tTime time.Time) (rTime time.Time) {
 }
 
 // subjectSeparate はタイトルから教科と課題名を抜き出す関数
-func subjectSeparate(title string) (string, string, string) {
+func subjectSeparate(title string) (subject string, subjectOmitted string, homework string) {
 	for i, str := range subjectsTimeTree {
 		if strings.Contains(homeworkFormat(title), str) {
 			subject = str
 			subjectOmitted = subjectsOmitted[i]
-			homeworkTitle = strings.TrimLeft(homeworkFormat(title), subject)
+			homework = strings.TrimLeft(homeworkFormat(title), subject)
 
-			return subject, subjectOmitted, homeworkTitle
+			return subject, subjectOmitted, homework
 		}
 	}
 

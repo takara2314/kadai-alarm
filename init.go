@@ -1,52 +1,49 @@
 package main
 
 import (
-	"context"
+	"database/sql"
 	"fmt"
-	"log"
+	"os"
 	"time"
 
-	firebase "firebase.google.com/go"
-	"google.golang.org/api/option"
+	_ "github.com/lib/pq"
 )
 
-// タイムゾーンを設定
-const location = "Asia/Tokyo"
-
 var (
-	oldTwitterName string = "ふぉくしーど"
-	ctx            context.Context
-	app            *firebase.App
-	collectionName string = "homeworks"
-	alarmTimes            = make(map[string][]interface{})
+	dbDriver  string = os.Getenv("DRIVER_NAME")
+	dbURL     string = os.Getenv("DATABASE_URL")
+	tableName string = "homeworks"
+	db        *sql.DB
 )
 
 func init() {
 	var err error
-
-	// Google App Engine はタイムゾーン指定できないので、Go側でタイムゾーンを指定する
-	loc, err := time.LoadLocation(location)
+	db, err = sql.Open(dbDriver, dbURL)
 	if err != nil {
-		loc = time.FixedZone(location, 9*60*60)
-	}
-	time.Local = loc
-
-	// 利用するデータベースを宣言
-	ctx = context.Background()
-	sa := option.WithCredentialsFile("kadai-alarm-5365dc12423d.json")
-
-	// データベースを開くこのアプリを初期化
-	app, err = firebase.NewApp(ctx, nil, sa)
-	if err != nil {
-		log.Fatalln(err)
-	} else {
-		fmt.Println("データベースに接続成功しました。")
+		panic(err)
 	}
 
-	// 現在のデータベースのhomeworksコレクションを全初期化
 	dbDelete()
-	// TimeTreeのスケジュールを取得
-	getSchedule()
+	// 現在の課題ID、省略された課題の教科名、アラーム時刻を取得
+	var sqlStatement string = fmt.Sprintf("SELECT id, omitted, alarmtime FROM %s", tableName)
+	rows, err := db.Query(sqlStatement)
+	if err != nil {
+		panic(nil)
+	}
+	defer rows.Close()
 
-	fmt.Println("起動完了しました。指定された時間になりましたら処理が開始されます。")
+	for rows.Next() {
+		var id string
+		var name string
+		var alarmTime time.Time
+
+		rows.Scan(&id, &name, &alarmTime)
+		// アラーム一覧になければ課題アラームを追加
+		if _, exist := alarmTimes[id]; !exist {
+			alarmTimes[id] = []interface{}{alarmTime, name}
+		}
+	}
+
+	// 現在のアラーム一覧
+	nowAlarms()
 }
