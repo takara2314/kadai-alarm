@@ -40,7 +40,7 @@ func doOnScheduleTime(getHours []int, getMinutes []int) {
 				// 報告するので、アラームリストから削除
 				delete(alarmTimes, homeworkIDs[0])
 				// 報告する課題の数が1つだけなら、教科名をそのままにして報告
-				updateProfile("*"+alarmHomeworks[0], false)
+				updateProfile(alarmHomeworks[0], false)
 
 			} else if len(alarmHomeworks) > 1 {
 				// 報告する課題の数が1より多いなら、それぞれの教科名の頭文字をとって報告
